@@ -24,7 +24,8 @@ GTEST_BUILD_DIR = gtestBuild
 # variable which refers to gtestlib.a
 LIB_GTEST = $(file $(GTEST_BUILD_DIR)/libgtest)
 
-INCLUDE_DIR = include $(GTEST_DIR)/include
+EIGEN_DIR = ../eigen-eigen-5097c01bcdc4/
+INCLUDE_DIR = include $(GTEST_DIR)/include $(EIGEN_DIR)
 SRC_DIR = src
 TEST_DIR = test
 
