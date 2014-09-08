@@ -1,0 +1,30 @@
+GTEST_ROOT = $(dir $(GTEST_DIR))
+GTEST_INCLUDE_DIR = $(dir $(GTEST_DIR)/include)
+GTEST_SRC_DIR = $(dir $(GTEST_DIR)/src)
+
+INCLUDES += $(GTEST_ROOT) $(GTEST_INCLUDE_DIR)
+
+SRC_FILE = gtest-all
+TARGET_SRC = $(file $(GTEST_SRC_DIR)/$(SRC_FILE).cc)
+GTEST_LIB = libgtest
+
+$(SRC_FILE)$(EXT_OBJ): $(TARGET_SRC)
+  section# this section keyword and the following lines indents are necessary to use IFILES variable. 
+    IFILES = $(addprefix -I, $(INCLUDES))
+    #echo g++ $(IFILES) $(CXXFLAGS) -o $@ -c $< 
+    g++ $(IFILES) $(CXXFLAGS) -o $@ -c $< # $@ means the target file name, $< means the first of the dependent files. 
+
+$(GTEST_LIB)$(EXT_LIB): $(SRC_FILE)$(EXT_OBJ) 
+  ar -rv $@ $< 
+
+gtestlib: $(GTEST_LIB)$(EXT_LIB) 
+  rm $(SRC_FILE)$(EXT_OBJ)
+  #mv $(GTEST_LIB)$(EXT_LIB) ../test/
+#  echo $(GTEST_DIR)
+#  echo $(GTEST_ROOT)
+#  echo $(GTEST_INCLUDE_DIR)
+#  echo $(GTEST_SRC_DIR)
+
+clean:
+    rm -rf $(filter-proper-targets $(ls R, .))
+

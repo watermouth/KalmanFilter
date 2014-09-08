@@ -1,0 +1,8 @@
+include/gtest/*
+*.omc
+*.a
+*lock
+*omakedb*
+*.o
+unittest
+*omakedb.lock
