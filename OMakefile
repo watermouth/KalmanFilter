@@ -23,16 +23,17 @@ GTEST_DIR = /Users/Dirac/Development/Cpp/gtest-1.7.0
 GTEST_BUILD_DIR = gtestBuild
 # variable which refers to gtestlib.a
 LIB_GTEST = $(file $(GTEST_BUILD_DIR)/libgtest)
+LIB_DIR = lib
 
 EIGEN_DIR = ../eigen-eigen-5097c01bcdc4/
 INCLUDE_DIR = include $(GTEST_DIR)/include $(EIGEN_DIR)
 SRC_DIR = src
 TEST_DIR = test
 
-PROGRAM = main 
+PROGRAM = KF 
 TEST_PROGRAM = $(TEST_DIR)/unittest
 
-CXXFLAGS += -O2 -Wall
+CXXFLAGS += -O2 -Wall -fPIC
 ASFLAGS +=
 LDFLAGS +=
 INCLUDES += $(dir $(INCLUDE_DIR) $(SRC_DIR))
@@ -45,14 +46,13 @@ INCLUDES += $(dir $(INCLUDE_DIR) $(SRC_DIR))
 #
 
 CXXFILES[] = $(removesuffix $(filter %.cpp, $(ls R, $(SRC_DIR))))
-CXXProgram($(PROGRAM), $(CXXFILES))
 
 
 ########################################################################
 # Test Program
 #
 
-TEST_CXXFILES[] = $(filter-out %main, $(CXXFILES)) $(removesuffix $(filter %.cpp, $(ls R, $(TEST_DIR))))
+TEST_CXXFILES[] = $(filter-out %KF, $(CXXFILES)) $(removesuffix $(filter %.cpp, $(ls R, $(TEST_DIR))))
 
 section
   CXXFLAGS += 
@@ -88,7 +88,7 @@ test: $(TEST_PROGRAM)
 clean:
   rm -rf $(filter-proper-targets $(ls R, .))
 
-all: $(PROGRAM)$(EXE)
+all: $(DynamicCXXLibrary $(LIB_DIR)/$(PROGRAM), $(CXXFILES))
 
 .DEFAULT: all
 
