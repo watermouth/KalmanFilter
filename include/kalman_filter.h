@@ -31,7 +31,7 @@ struct KalmanFilter {
                const Eigen::MatrixXd &G,
                const Eigen::MatrixXd &W);
   /// 初期分布の設定
-  void SetInitialDistribution(const Eigen::VectorXd  m0, const Eigen::MatrixXd C0);
+  void SetInitialDistribution(const Eigen::VectorXd &m0, const Eigen::MatrixXd &C0);
   /// 予測・フィルタリングステップ
   /// \param[in] y 観測値
   void Filtering(const Eigen::VectorXd &y);

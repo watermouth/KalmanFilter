@@ -40,7 +40,7 @@ struct KalmanFilterCore {
   /// 初期化必須の対象を明示する
   /// \param[in] m0 初期状態分布の期待値
   /// \param[in] C0 初期状態分布の分散共分散行列
-  void SetInitialDistribution(const Eigen::VectorXd  m0, const Eigen::MatrixXd C0) {
+  void SetInitialDistribution(const Eigen::VectorXd &m0, const Eigen::MatrixXd &C0) {
     m_ = m0;
     C_ = C0;
   }

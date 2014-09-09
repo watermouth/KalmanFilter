@@ -14,7 +14,7 @@ KalmanFilter::KalmanFilter(const Eigen::MatrixXd &F, const Eigen::MatrixXd &V, c
   core_->W_ = &W_; 
 }
 
-void KalmanFilter::SetInitialDistribution(const Eigen::VectorXd  m0, const Eigen::MatrixXd C0) {
+void KalmanFilter::SetInitialDistribution(const Eigen::VectorXd &m0, const Eigen::MatrixXd &C0) {
   core_->SetInitialDistribution(m0, C0);
 }
 
