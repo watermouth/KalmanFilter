@@ -71,7 +71,7 @@ struct KalmanFilterCore {
   {
     out_KG = R_ * F_->transpose() * Q_.inverse();
     out_m = a_ + out_KG * (y - (*F_) * a_); 
-    out_C = R_ + out_KG * (*F_) * R_;
+    out_C = R_ - out_KG * (*F_) * R_;
   }
 
   /// 1期前のフィルタ分布を所与として、
