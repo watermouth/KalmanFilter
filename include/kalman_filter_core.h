@@ -49,7 +49,7 @@ struct KalmanFilterCore {
   /// \param[out] out_a 予測分布の期待値 
   /// \param[out] out_R 予測分布の共分散行列
   void predict_state(Eigen::VectorXd &out_a, Eigen::MatrixXd &out_R) const {
-    out_a = (*F_) * m_;
+    out_a = (*G_) * m_;
     out_R = (*G_) * C_ * G_->transpose() + (*W_);
   }
 
