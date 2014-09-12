@@ -1,8 +1,9 @@
-#ifndef INCLUDE_EXTENDED_KALMAN_FILTER_CORE_H
-#define INCLUDE_EXTENDED_KALMAN_FILTER_CORE_H
+#ifndef INCLUDE_EXTENDED_KALMAN_FILTER_H
+#define INCLUDE_EXTENDED_KALMAN_FILTER_H
 
 #include <Eigen/Dense>
 #include <Eigen/Core>
+#include "kalman_filter_core.h"
 
 namespace my_library{
 
@@ -47,10 +48,20 @@ struct EKFExample1 : EKFModelFunctionBase<EKFExample1> {
 };
 
 template <typename Fun>
-struct ExtendedKalmanFilterCore{
+struct ExtendedKalmanFilter{
   /// definition objects of
   /// nonlinear functions and Jacobi matrix functions
-  Fun function_objects;
+  Fun fobj_;
+  /// 1期前のフィルタ分布を所与として、
+  /// 状態の1期先予測・観測の1期先予測・フィルタリングをまとめて実行し、
+  /// 各分布（の期待値と分散）を更新する。
+  void UpdateDistributions(const Eigen::VectorXd &y) {
+    filtering(y, KG_, m_, C_); 
+  }
+
+private:
+  /// APIに影響を与えないようにするため, privateにしておく
+  KalmanFilterCore kfc_;   
 };
 
 }
