@@ -62,6 +62,7 @@ TEST(EigenTest, MatrixBaseUseTest){
   M1(0,1) = 8;
   M1(1,0) = 4;
   M1(1,1) = 5;
+  M2 = MatrixXd::Identity(3,3);
   AddZeroZeroElement(M1, M2);
 }
 
