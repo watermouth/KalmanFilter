@@ -50,6 +50,14 @@ struct KalmanFilterCore {
   /// \param[out] out_R 予測分布の共分散行列
   void predict_state(Eigen::VectorXd &out_a, Eigen::MatrixXd &out_R) const {
     out_a = (*G_) * m_;
+    predict_state(out_R);
+  }
+
+  /// 状態の1期先予測の共分散行列のみ更新する
+  /// \param[out] out_R 予測分布の共分散行列
+  void predict_state(Eigen::MatrixXd &out_R)
+  const
+  {
     out_R = (*G_) * C_ * G_->transpose() + (*W_);
   }
 
@@ -58,6 +66,12 @@ struct KalmanFilterCore {
   /// \param[out] out_Q 予測分布の共分散行列
   void predict_observation(Eigen::VectorXd &out_f, Eigen::MatrixXd &out_Q) const {
     out_f = (*F_) * a_;
+    predict_observation(out_Q);
+  }
+
+  /// 観測の1期先予測の共分散行列のみ更新する
+  /// \param[out] out_Q 予測分布の共分散行列
+  void predict_observation(Eigen::MatrixXd &out_Q) const {
     out_Q = (*F_) * R_ * F_->transpose() + (*V_);
   }
 
@@ -70,7 +84,7 @@ struct KalmanFilterCore {
     Eigen::VectorXd &out_m, Eigen::MatrixXd &out_C)
   {
     out_KG = R_ * F_->transpose() * Q_.inverse();
-    out_m = a_ + out_KG * (y - (*F_) * a_); 
+    out_m = a_ + out_KG * (y - f_); 
     out_C = R_ - out_KG * (*F_) * R_;
   }
 
