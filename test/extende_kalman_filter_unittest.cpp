@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "extended_kalman_filter_core.h"
+#include "extended_kalman_filter.h"
 
 #include <cstdio>
 #include <vector>
