@@ -66,8 +66,10 @@ TEST_F(ExtendedKalmanFilterTest, AR2Test){
   ExtendedKalmanFilter<AR2> ekf(V, W);
   ekf.SetInitialDistribution(m0, C0);
   ekf.G_ = MatrixXd::Identity(4,4);  
-  obj.G(m0, ekf.G_);
-
+  obj.G(m0, ekf.G_);// 動く 
+  ekf.fobj_ptr_->G(m0, ekf.G_); //動く 
+  ekf.predict_state(m0, ekf.G_);//コンパイルエラー
+/*
   /// online update 
   vector<double> y;
   using namespace boost::assign;
@@ -79,4 +81,5 @@ TEST_F(ExtendedKalmanFilterTest, AR2Test){
     cout << ekf.kfcore_->m_ << ", " << endl; 
   }
   cout << endl;
+*/
 }
