@@ -108,8 +108,7 @@ struct ExtendedKalmanFilter{
   void predict_state(
     Eigen::VectorXd &out_a, Eigen::MatrixXd &out_R) const 
   {
-    /// prediction step
-    /// Jacobi行列の更新
+    /// 先にJacobi行列の更新
     fobj_ptr_->G(kfcore_->m_, G_);
     /// covariance matrix
     kfcore_->predict_state(out_R);
@@ -123,7 +122,7 @@ struct ExtendedKalmanFilter{
   void predict_observation(
     Eigen::VectorXd &out_f, Eigen::MatrixXd &out_Q) const
   {
-    /// Jacobi行列の更新
+    /// 先にJacobi行列の更新
     fobj_ptr_->F(kfcore_->a_, F_);
     /// covariance matrix
     kfcore_->predict_observation(out_Q);
@@ -137,6 +136,9 @@ struct ExtendedKalmanFilter{
   /// \param[in] y 観測値
   void Filtering(const Eigen::VectorXd &y)
   {
+    predict_state(kfcore_->a_, kfcore_->R_); 
+    predict_observation(kfcore_->f_, kfcore_->Q_); 
+    kfcore_->filtering(y, kfcore_->KG_, kfcore_->m_, kfcore_->C_);
   }
 private:
   /// APIに影響を与えないようにするため, privateにしておく
