@@ -65,16 +65,18 @@ TEST_F(ExtendedKalmanFilterTest, AR2Test){
   /// EKFの初期化
   ExtendedKalmanFilter<AR2> ekf(V, W);
   ekf.SetInitialDistribution(m0, C0);
+  
 /*
+  obj.G(m0, ekf.G_);
   /// online update 
   vector<double> y;
   using namespace boost::assign;
   y += 17, 16.6, 16.3, 16.1, 17.1, 16.9, 16.8, 17.4, 17.1, 17;
   for (vector<double>::iterator it = y.begin(); it != y.end(); ++it) {
     Eigen::VectorXd yy(1);
-    yy << *it;
+    yy(0) = *it;
     ekf.Filtering(yy);
-    printf("%1.10f, ", ekf.kfcore_->m_(0));
+    cout << ekf.kfcore_->m_ << ", " << endl; 
   }
   cout << endl;
 */

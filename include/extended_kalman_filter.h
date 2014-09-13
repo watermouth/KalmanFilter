@@ -50,9 +50,9 @@ struct EKFExample1 : EKFModelFunctionBase<EKFExample1> {
   {
     out = v;
   }
-  template <typename Derived>
+  template <typename Derived, typename Der2>
   void G_impl(const Eigen::MatrixBase<Derived> &v
-    , Eigen::MatrixBase<Derived> &out)
+    , Eigen::MatrixBase<Der2> &out)
   {
     /// returns unit matrix whose dimenstion is rows(m) * rows(m)
     out = Eigen::MatrixXd::Identity(v.rows(), v.rows());
@@ -63,9 +63,9 @@ struct EKFExample1 : EKFModelFunctionBase<EKFExample1> {
   {
   }
 
-  template <typename Derived>
+  template <typename Derived, typename Der2>
   void F_impl(const Eigen::MatrixBase<Derived> &v
-    , Eigen::MatrixBase<Derived> &out)
+    , Eigen::MatrixBase<Der2> &out)
   {
   }
 };
