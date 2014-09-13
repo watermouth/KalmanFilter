@@ -17,9 +17,9 @@ struct EKFModelFunctionBase {
     get().g_impl(v, out);
   }
   /// state model Jacobi matrix
-  template <typename Derived>
+  template <typename Derived, typename Der2>
   void G(const Eigen::MatrixBase<Derived> &v
-    , Eigen::MatrixBase<Derived> &out) {
+    , Eigen::MatrixBase<Der2> &out) {
     get().G_impl(v, out);
   }
   /// observation model
@@ -29,9 +29,9 @@ struct EKFModelFunctionBase {
     get().f_impl(v, out);
   }
   /// observation model Jacobi matrix
-  template <typename Derived>
+  template <typename Derived, typename Der2>
   void F(const Eigen::MatrixBase<Derived> &v
-    , Eigen::MatrixBase<Derived> &out) {
+    , Eigen::MatrixBase<Der2> &out) {
     get().F_impl(v, out);
   }
 protected:
@@ -68,8 +68,43 @@ struct EKFExample1 : EKFModelFunctionBase<EKFExample1> {
     , Eigen::MatrixBase<Derived> &out)
   {
   }
-  double coeff1_;
 };
+
+struct AR2 : EKFModelFunctionBase<AR2> {
+  template <typename Derived>
+  void g_impl(const Eigen::MatrixBase<Derived> &v
+    , Eigen::MatrixBase<Derived> &out)
+  {
+    out(0,0) = v(2,0)*v(0,0) + v(3,0)*v(1,0);
+  }
+  template <typename Derived, typename Der2>
+  void G_impl(const Eigen::MatrixBase<Derived> &v
+    , Eigen::MatrixBase<Der2> &out)
+  {
+    out.resize(4,4);
+    /// returns unit matrix whose dimenstion is rows(m) * rows(m)
+    out <<
+      v(2), v(3), v(0), v(1),
+      1   ,    0,    0,    0,
+      0   ,    0,    1,    0,
+      0   ,    0,    0,    1;
+  }
+  template <typename Derived>
+  void f_impl(const Eigen::MatrixBase<Derived> &v
+    , Eigen::MatrixBase<Derived> &out)
+  {
+    out << v(0);
+  }
+
+  template <typename Derived, typename Der2>
+  void F_impl(const Eigen::MatrixBase<Derived> &v
+    , Eigen::MatrixBase<Der2> &out)
+  {
+    out = Eigen::MatrixXd::Zero(4,4);
+    out(0,0) = 1;
+  }
+}; 
+
 
 template <typename Fun>
 struct ExtendedKalmanFilter{
@@ -84,6 +119,8 @@ struct ExtendedKalmanFilter{
   /// definition objects of
   /// nonlinear functions and Jacobi matrix functions
   boost::scoped_ptr<Fun> fobj_ptr_;
+  /// kalman filter core
+  boost::scoped_ptr<KalmanFilterCore> kfcore_;   
   ExtendedKalmanFilter(
     const Eigen::MatrixXd &V,
     const Eigen::MatrixXd &W)
@@ -140,9 +177,6 @@ struct ExtendedKalmanFilter{
     predict_observation(kfcore_->f_, kfcore_->Q_); 
     kfcore_->filtering(y, kfcore_->KG_, kfcore_->m_, kfcore_->C_);
   }
-private:
-  /// APIに影響を与えないようにするため, privateにしておく
-  boost::scoped_ptr<KalmanFilterCore> kfcore_;   
 };
 
 }

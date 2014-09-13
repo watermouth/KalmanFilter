@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Eigen/Dense"
 
+using namespace std;
 using namespace Eigen;
 
 TEST(EigenTest, FirstExample){
@@ -64,5 +65,14 @@ TEST(EigenTest, MatrixBaseUseTest){
   M1(1,1) = 5;
   M2 = MatrixXd::Identity(3,3);
   AddZeroZeroElement(M1, M2);
+}
+
+TEST(EigenTest, InitializationMethod){
+  Vector3d v(1,2,3);
+  v << 1, 1, 1;
+  cout << v << endl << "," << endl;
+  v(1,0) = 2;
+  v(2) = 0;
+  cout << v;
 }
 
