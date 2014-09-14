@@ -55,39 +55,45 @@ TEST_F(ExtendedKalmanFilterTest, AR2Test){
   C0 = MatrixXd::Identity(4,4);
   C0(1,1) = 0;
 
-  /// EKFの初期化
-  ExtendedKalmanFilter<AR2> ekf(V, W);
-  ekf.SetInitialDistribution(m0, C0);
-  ekf.G_ = MatrixXd::Identity(4,4);
-  ekf.F_ = MatrixXd::Identity(1,4);
-
   {
+    /// EKFの初期化
+    ExtendedKalmanFilter<AR2> ekf_temp(V, W);
+    ekf_temp.SetInitialDistribution(m0, C0);
+  //  ekf_temp.G_ = MatrixXd::Identity(4,4);
+  //  ekf_temp.F_ = MatrixXd::Identity(1,4);
     /// one step filtering
     Eigen::VectorXd a, f;
     Eigen::MatrixXd R, Q;
     cout << "one step predict_state " << endl;
     a = Eigen::MatrixXd::Identity(4,1);
     R = Eigen::MatrixXd::Identity(4,4);
-    ekf.predict_state(a, R);
+    ekf_temp.predict_state(a, R);
     cout << a << endl;
     cout << R << endl;
     cout << "one step predict_observation " << endl;
-    ekf.kfcore_->a_ = a;
-    ekf.kfcore_->R_ = R;
+//    ekf_temp.kfcore_->a_ = a;
+//    ekf_temp.kfcore_->R_ = R;
     f = Eigen::MatrixXd::Identity(1,1);
     Q = Eigen::MatrixXd::Identity(1,1);
-    ekf.predict_observation(f, Q);
+    ekf_temp.predict_observation(f, Q);
     cout << f << endl;
     cout << Q << endl;
     cout << "one step filtering " << endl;
-    ekf.kfcore_->f_ = f;
-    ekf.kfcore_->Q_ = Q;
+//    ekf_temp.kfcore_->f_ = f;
+//    ekf_temp.kfcore_->Q_ = Q;
     Eigen::VectorXd y(1); y << 1;
-    ekf.kfcore_->filtering(y, ekf.kfcore_->KG_,
-      ekf.kfcore_->m_, ekf.kfcore_->C_
+    ekf_temp.kfcore_->filtering(y, ekf_temp.kfcore_->KG_,
+      ekf_temp.kfcore_->m_, ekf_temp.kfcore_->C_
     );
   }
+
+  /// EKFの初期化
+  ExtendedKalmanFilter<AR2> ekf(V, W);
+  ekf.SetInitialDistribution(m0, C0);
   /// online update 
+  cout << "m0, C0" << endl;
+  cout << ekf.kfcore_->m_ << ",, " << endl;
+  cout << ekf.kfcore_->C_ << ".. " << endl;
   vector<double> y;
   using namespace boost::assign;
   y += 17, 16.6, 16.3, 16.1, 17.1, 16.9, 16.8, 17.4, 17.1, 17;
@@ -95,7 +101,7 @@ TEST_F(ExtendedKalmanFilterTest, AR2Test){
     Eigen::VectorXd yy(1);
     yy(0) = *it;
     ekf.Filtering(yy);
-    cout << ekf.kfcore_->m_ << ", " << endl; 
+//    cout << ekf.kfcore_->m_ << ", " << endl; 
   }
   cout << endl;
 /*

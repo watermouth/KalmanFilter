@@ -3,6 +3,7 @@
 
 #include <Eigen/Dense>
 #include <Eigen/Core>
+#include <iostream>
 #include <boost/scoped_ptr.hpp>
 #include "kalman_filter_core.h"
 
@@ -76,13 +77,21 @@ struct AR2 : public EKFModelFunctionBase<AR2> {
   void g_impl(const Eigen::MatrixBase<Derived> &v
     , Eigen::MatrixBase<Derived> &out)
   {
-    out(0,0) = v(2,0)*v(0,0) + v(3,0)*v(1,0);
+//    out(0,0) = v(2,0)*v(0,0) + v(3,0)*v(1,0);
+    out << v(2,0)*v(0,0) + v(3,0)*v(1,0)
+         , v(0)
+         , v(2)
+         , v(3);
   }
   template <typename Derived, typename Der2>
   void G_impl(const Eigen::MatrixBase<Derived> &v
     , Eigen::MatrixBase<Der2> &out)
   {
-    out.resize(4,4);
+//    out(0,0) = v(2); out(0,1) = v(3); out(0,2) = v(0); out(0,3) = v(1);
+//    out(1,0) =    1; out(1,1) =    0; out(1,2) =    0; out(1,3) =    0;
+//    out(2,0) =    0; out(2,1) =    0; out(2,2) =    1; out(2,3) =    0;
+//    out(3,0) =    0; out(3,1) =    0; out(3,2) =    0; out(3,3) =    1;
+    //out.resize(4,4);
     /// returns unit matrix whose dimenstion is rows(m) * rows(m)
     out <<
       v(2), v(3), v(0), v(1),
@@ -102,7 +111,7 @@ struct AR2 : public EKFModelFunctionBase<AR2> {
   void F_impl(const Eigen::MatrixBase<Derived> &v
     , Eigen::MatrixBase<Der2> &out)
   {
-    out.resize(1,4);
+    //out.resize(1,4);
     out = Eigen::MatrixXd::Zero(1,4);
     out(0,0) = 1;
   }
@@ -129,6 +138,15 @@ struct ExtendedKalmanFilter{
     const Eigen::MatrixXd &W)
   : V_(V), W_(W), fobj_ptr_(new Fun), kfcore_(new KalmanFilterCore)
   {
+    /// Matrix dimension の設定
+    G_.resize(W.rows(), W.cols());
+    F_.resize(V.rows(), W.cols());
+    kfcore_->m_.resize(W.rows(),1);
+    kfcore_->C_.resize(W.rows(),W.cols());
+    kfcore_->a_.resize(W.rows(),1);
+    kfcore_->R_.resize(W.rows(),W.cols());
+    kfcore_->f_.resize(V.rows(),1);
+    kfcore_->Q_.resize(V.rows(),V.cols());
     /// pointerの設定
     kfcore_->F_ = &F_; 
     kfcore_->V_ = &V_; 
@@ -177,8 +195,14 @@ struct ExtendedKalmanFilter{
   void Filtering(const Eigen::VectorXd &y)
   {
     predict_state(kfcore_->a_, kfcore_->R_); 
+    std::cout << "....." << std::endl;
+    std::cout << kfcore_->a_ << std::endl << kfcore_->R_ << std::endl;
     predict_observation(kfcore_->f_, kfcore_->Q_); 
+    std::cout << "..." << std::endl;
+    std::cout << kfcore_->f_ << std::endl << kfcore_->Q_ << std::endl;
     kfcore_->filtering(y, kfcore_->KG_, kfcore_->m_, kfcore_->C_);
+    std::cout << "..." << std::endl;
+    std::cout << kfcore_->m_ << std::endl << kfcore_->C_ << std::endl;
   }
 };
 
