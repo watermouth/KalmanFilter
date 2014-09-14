@@ -59,8 +59,6 @@ TEST_F(ExtendedKalmanFilterTest, AR2Test){
     /// EKFの初期化
     ExtendedKalmanFilter<AR2> ekf_temp(V, W);
     ekf_temp.SetInitialDistribution(m0, C0);
-  //  ekf_temp.G_ = MatrixXd::Identity(4,4);
-  //  ekf_temp.F_ = MatrixXd::Identity(1,4);
     /// one step filtering
     Eigen::VectorXd a, f;
     Eigen::MatrixXd R, Q;
@@ -71,16 +69,12 @@ TEST_F(ExtendedKalmanFilterTest, AR2Test){
     cout << a << endl;
     cout << R << endl;
     cout << "one step predict_observation " << endl;
-//    ekf_temp.kfcore_->a_ = a;
-//    ekf_temp.kfcore_->R_ = R;
     f = Eigen::MatrixXd::Identity(1,1);
     Q = Eigen::MatrixXd::Identity(1,1);
     ekf_temp.predict_observation(f, Q);
     cout << f << endl;
     cout << Q << endl;
     cout << "one step filtering " << endl;
-//    ekf_temp.kfcore_->f_ = f;
-//    ekf_temp.kfcore_->Q_ = Q;
     Eigen::VectorXd y(1); y << 1;
     ekf_temp.kfcore_->filtering(y, ekf_temp.kfcore_->KG_,
       ekf_temp.kfcore_->m_, ekf_temp.kfcore_->C_
@@ -101,9 +95,7 @@ TEST_F(ExtendedKalmanFilterTest, AR2Test){
     Eigen::VectorXd yy(1);
     yy(0) = *it;
     ekf.Filtering(yy);
-//    cout << ekf.kfcore_->m_ << ", " << endl; 
+    cout << ekf.kfcore_->m_ << ", " << endl; 
   }
   cout << endl;
-/*
-*/
 }

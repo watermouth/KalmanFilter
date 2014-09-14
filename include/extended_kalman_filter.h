@@ -77,7 +77,7 @@ struct AR2 : public EKFModelFunctionBase<AR2> {
   void g_impl(const Eigen::MatrixBase<Derived> &v
     , Eigen::MatrixBase<Derived> &out)
   {
-//    out(0,0) = v(2,0)*v(0,0) + v(3,0)*v(1,0);
+    /// (4,1) matrix
     out << v(2,0)*v(0,0) + v(3,0)*v(1,0)
          , v(0)
          , v(2)
@@ -87,12 +87,7 @@ struct AR2 : public EKFModelFunctionBase<AR2> {
   void G_impl(const Eigen::MatrixBase<Derived> &v
     , Eigen::MatrixBase<Der2> &out)
   {
-//    out(0,0) = v(2); out(0,1) = v(3); out(0,2) = v(0); out(0,3) = v(1);
-//    out(1,0) =    1; out(1,1) =    0; out(1,2) =    0; out(1,3) =    0;
-//    out(2,0) =    0; out(2,1) =    0; out(2,2) =    1; out(2,3) =    0;
-//    out(3,0) =    0; out(3,1) =    0; out(3,2) =    0; out(3,3) =    1;
-    //out.resize(4,4);
-    /// returns unit matrix whose dimenstion is rows(m) * rows(m)
+    /// (4,4) matrix
     out <<
       v(2), v(3), v(0), v(1),
       1   ,    0,    0,    0,
@@ -104,6 +99,7 @@ struct AR2 : public EKFModelFunctionBase<AR2> {
   void f_impl(const Eigen::MatrixBase<Derived> &v
     , Eigen::MatrixBase<Derived> &out)
   {
+    /// (1,1) matrix
     out(0,0) = v(0);
   }
 
@@ -111,7 +107,7 @@ struct AR2 : public EKFModelFunctionBase<AR2> {
   void F_impl(const Eigen::MatrixBase<Derived> &v
     , Eigen::MatrixBase<Der2> &out)
   {
-    //out.resize(1,4);
+    /// (1,4) matrix
     out = Eigen::MatrixXd::Zero(1,4);
     out(0,0) = 1;
   }
@@ -195,14 +191,14 @@ struct ExtendedKalmanFilter{
   void Filtering(const Eigen::VectorXd &y)
   {
     predict_state(kfcore_->a_, kfcore_->R_); 
-    std::cout << "....." << std::endl;
-    std::cout << kfcore_->a_ << std::endl << kfcore_->R_ << std::endl;
+//    std::cout << "....." << std::endl;
+//    std::cout << kfcore_->a_ << std::endl << kfcore_->R_ << std::endl;
     predict_observation(kfcore_->f_, kfcore_->Q_); 
-    std::cout << "..." << std::endl;
-    std::cout << kfcore_->f_ << std::endl << kfcore_->Q_ << std::endl;
+//    std::cout << "..." << std::endl;
+//    std::cout << kfcore_->f_ << std::endl << kfcore_->Q_ << std::endl;
     kfcore_->filtering(y, kfcore_->KG_, kfcore_->m_, kfcore_->C_);
-    std::cout << "..." << std::endl;
-    std::cout << kfcore_->m_ << std::endl << kfcore_->C_ << std::endl;
+//    std::cout << "..." << std::endl;
+//    std::cout << kfcore_->m_ << std::endl << kfcore_->C_ << std::endl;
   }
 };
 
