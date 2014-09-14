@@ -35,6 +35,10 @@ struct EKFModelFunctionBase {
     , Eigen::MatrixBase<Der2> &out) {
     get().F_impl(v, out);
   }
+
+  /// TODO
+  /// 計算量を減らすための状態変数初期化＆保持コード
+
 protected:
   T& get() {
     return static_cast<T&>(*this);
