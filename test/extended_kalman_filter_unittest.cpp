@@ -68,7 +68,8 @@ TEST_F(ExtendedKalmanFilterTest, AR2Test){
   ekf.G_ = MatrixXd::Identity(4,4);  
   obj.G(m0, ekf.G_);// 動く 
   ekf.fobj_ptr_->G(m0, ekf.G_); //動く 
-  ekf.predict_state(m0, ekf.G_);//コンパイルエラー
+  ekf.fobj_ptr_->G(ekf.kfcore_->m_, ekf.G_); //動く 
+  ekf.predict_state(m0, ekf.G_);//コンパイルエラー -> predict_stateのconstを外す事で通るようになった。 
 /*
   /// online update 
   vector<double> y;

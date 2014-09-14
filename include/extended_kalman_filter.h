@@ -43,7 +43,7 @@ protected:
   }
 };
 
-struct EKFExample1 : EKFModelFunctionBase<EKFExample1> {
+struct EKFExample1 : public EKFModelFunctionBase<EKFExample1> {
   template <typename Derived>
   void g_impl(const Eigen::MatrixBase<Derived> &v
     , Eigen::MatrixBase<Derived> &out)
@@ -70,7 +70,7 @@ struct EKFExample1 : EKFModelFunctionBase<EKFExample1> {
   }
 };
 
-struct AR2 : EKFModelFunctionBase<AR2> {
+struct AR2 : public EKFModelFunctionBase<AR2> {
   template <typename Derived>
   void g_impl(const Eigen::MatrixBase<Derived> &v
     , Eigen::MatrixBase<Derived> &out)
@@ -143,7 +143,7 @@ struct ExtendedKalmanFilter{
   /// \param[out] out_a 予測分布の期待値 
   /// \param[out] out_R 予測分布の共分散行列
   void predict_state(
-    Eigen::VectorXd &out_a, Eigen::MatrixXd &out_R) const 
+    Eigen::VectorXd &out_a, Eigen::MatrixXd &out_R)
   {
     /// 先にJacobi行列の更新
     fobj_ptr_->G(kfcore_->m_, G_);
@@ -157,7 +157,7 @@ struct ExtendedKalmanFilter{
   /// \param[out] out_f 予測分布の期待値 
   /// \param[out] out_Q 予測分布の共分散行列
   void predict_observation(
-    Eigen::VectorXd &out_f, Eigen::MatrixXd &out_Q) const
+    Eigen::VectorXd &out_f, Eigen::MatrixXd &out_Q)
   {
     /// 先にJacobi行列の更新
     fobj_ptr_->F(kfcore_->a_, F_);
