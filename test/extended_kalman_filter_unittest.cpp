@@ -52,13 +52,6 @@ TEST_F(ExtendedKalmanFilterTest, AR2Test){
   Eigen::VectorXd m0(4);
   Eigen::MatrixXd C0(4,4);
   m0 << 17.2, 0, 0.5, 0.5;
- 
-  /// AR2 method test
-  AR2 obj;
-  cout << C0 << endl << "," << endl;
-  obj.G(m0, C0);
-  cout << C0 << endl << "," << endl;
-  /// 改めて初期化
   C0 = MatrixXd::Identity(4,4);
   C0(1,1) = 0;
 
