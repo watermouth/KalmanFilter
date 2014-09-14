@@ -71,6 +71,7 @@ struct EKFExample1 : public EKFModelFunctionBase<EKFExample1> {
 };
 
 struct AR2 : public EKFModelFunctionBase<AR2> {
+  /// System model
   template <typename Derived>
   void g_impl(const Eigen::MatrixBase<Derived> &v
     , Eigen::MatrixBase<Derived> &out)
@@ -89,18 +90,20 @@ struct AR2 : public EKFModelFunctionBase<AR2> {
       0   ,    0,    1,    0,
       0   ,    0,    0,    1;
   }
+  /// Observation model
   template <typename Derived>
   void f_impl(const Eigen::MatrixBase<Derived> &v
     , Eigen::MatrixBase<Derived> &out)
   {
-    out << v(0);
+    out(0,0) = v(0);
   }
 
   template <typename Derived, typename Der2>
   void F_impl(const Eigen::MatrixBase<Derived> &v
     , Eigen::MatrixBase<Der2> &out)
   {
-    out = Eigen::MatrixXd::Zero(4,4);
+    out.resize(1,4);
+    out = Eigen::MatrixXd::Zero(1,4);
     out(0,0) = 1;
   }
 }; 
