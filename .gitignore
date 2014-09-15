@@ -21,9 +21,11 @@
 *.app
 
 # customized
+*.swp
 include/gtest/*
 *.omc
 *lock
 *omakedb*
 *omakedb.lock
 unittest
+
